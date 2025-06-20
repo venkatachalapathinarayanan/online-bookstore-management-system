@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.ordermanagement.service.OrderServiceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:20:39.866Z" hostname="INCHEL-8WFYB24" time="1.786">
+  <properties/>
+  <testcase name="confirmPayment returns order response()" classname="com.bookstore.ordermanagement.service.OrderServiceTest" time="1.518"/>
+  <testcase name="createOrder returns order response()" classname="com.bookstore.ordermanagement.service.OrderServiceTest" time="0.144"/>
+  <testcase name="getOrderStatus returns status()" classname="com.bookstore.ordermanagement.service.OrderServiceTest" time="0.035"/>
+  <testcase name="getOrderHistory returns list()" classname="com.bookstore.ordermanagement.service.OrderServiceTest" time="0.066"/>
+  <system-out><![CDATA[16:50:41.269 [Test worker] INFO com.bookstore.ordermanagement.service.OrderService -- Payment confirmed for order 1
+16:50:41.467 [Test worker] INFO com.bookstore.ordermanagement.service.OrderService -- Order created successfully: 1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

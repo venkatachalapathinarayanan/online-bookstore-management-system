@@ -1,0 +1,532 @@
+openapi: 3.0.3
+info:
+  title: 📚 Book Inventory Service API
+  version: 1.0.0
+  description: |
+    # Book Inventory Service API
+    
+    Comprehensive book catalog management with inventory tracking and search capabilities.
+    
+    ## Features
+    - 📖 **Book Management:** Complete book catalog operations
+    - 🔍 **Search & Discovery:** Advanced book search capabilities
+    - 📦 **Inventory Tracking:** Real-time stock management and low-stock alerts
+    - 🛡️ **Security:** JWT-based authentication with role-based access control
+    
+    ## Authentication
+    Most write operations require authentication using a Bearer JWT token:
+    1. Login via User Management Service to get your JWT token
+    2. Include the token in the Authorization header: `Bearer <your-jwt-token>`
+    
+    ## Quick Start
+    1. Browse books via `GET /api/books` (no auth required)
+    2. Search books via `GET /api/search/books` (no auth required)
+    3. For admin operations: authenticate and manage inventory
+  contact:
+    name: Bookstore Development Team
+    email: support@bookstore.com
+    url: https://bookstore.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://localhost:8082
+    description: Local Development Server
+  - url: https://api.bookstore.com/book-service
+    description: Production Server
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter JWT Bearer token in the format Bearer <token>
+
+  schemas:
+    BookRequest:
+      type: object
+      required:
+        - title
+        - author
+        - isbn
+        - genre
+        - price
+        - description
+      properties:
+        title:
+          type: string
+          example: "The Great Gatsby"
+          description: "Book title"
+        author:
+          type: string
+          example: "F. Scott Fitzgerald"
+          description: "Book author"
+        isbn:
+          type: string
+          example: "978-0-7432-7356-5"
+          description: "ISBN number"
+        genre:
+          type: string
+          example: "Classic Fiction"
+          description: "Book genre/category"
+        price:
+          type: number
+          format: double
+          example: 12.99
+          description: "Book price in USD"
+        description:
+          type: string
+          example: "A classic American novel set in the Jazz Age."
+          description: "Book description"
+
+    BookResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: "The Great Gatsby"
+        author:
+          type: string
+          example: "F. Scott Fitzgerald"
+        isbn:
+          type: string
+          example: "978-0-7432-7356-5"
+        genre:
+          type: string
+          example: "Classic Fiction"
+        price:
+          type: number
+          format: double
+          example: 12.99
+        description:
+          type: string
+          example: "A classic American novel set in the Jazz Age."
+        isDeleted:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+
+    InventoryRequest:
+      type: object
+      required:
+        - quantity
+        - lowStockThreshold
+      properties:
+        quantity:
+          type: integer
+          example: 100
+          description: "Current stock quantity"
+        lowStockThreshold:
+          type: integer
+          example: 10
+          description: "Low stock alert threshold"
+
+    InventoryResponse:
+      type: object
+      properties:
+        bookId:
+          type: integer
+          format: int64
+          example: 1
+        quantity:
+          type: integer
+          example: 100
+        lowStockThreshold:
+          type: integer
+          example: 10
+        isLowStock:
+          type: boolean
+          example: false
+        lastUpdated:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+
+    BookSearchRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "gatsby"
+          description: "Search by book title"
+        author:
+          type: string
+          example: "fitzgerald"
+          description: "Search by author name"
+        genre:
+          type: string
+          example: "fiction"
+          description: "Search by genre"
+        isbn:
+          type: string
+          example: "978-0-7432-7356-5"
+          description: "Search by ISBN"
+        minPrice:
+          type: number
+          format: double
+          example: 10.0
+          description: "Minimum price filter"
+        maxPrice:
+          type: number
+          format: double
+          example: 20.0
+          description: "Maximum price filter"
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00.000+00:00"
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: "Bad Request"
+        message:
+          type: string
+          example: "Validation failed"
+        path:
+          type: string
+          example: "/api/books"
+
+paths:
+  /api/books:
+    post:
+      tags:
+        - Books
+      summary: Create a new book
+      description: Adds a new book to the inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookRequest'
+      responses:
+        '201':
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Books
+      summary: List all books
+      description: Retrieves a list of all books in the inventory
+      security: []
+      responses:
+        '200':
+          description: List of books returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResponse'
+
+  /api/books/{id}:
+    get:
+      tags:
+        - Books
+      summary: Get book by ID
+      description: Retrieves a book by its unique ID
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: Book found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Books
+      summary: Update a book
+      description: Updates the details of an existing book
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookRequest'
+      responses:
+        '200':
+          description: Book updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Books
+      summary: Soft delete a book
+      description: Marks a book as deleted without removing it from the database
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '204':
+          description: Book soft deleted
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/search/books:
+    get:
+      tags:
+        - Search & Discovery
+      summary: Search books
+      description: Search books by various criteria including title, author, genre, ISBN, and price range
+      security: []
+      parameters:
+        - name: title
+          in: query
+          description: Search by book title
+          schema:
+            type: string
+            example: "gatsby"
+        - name: author
+          in: query
+          description: Search by author name
+          schema:
+            type: string
+            example: "fitzgerald"
+        - name: genre
+          in: query
+          description: Search by genre
+          schema:
+            type: string
+            example: "fiction"
+        - name: isbn
+          in: query
+          description: Search by ISBN
+          schema:
+            type: string
+            example: "978-0-7432-7356-5"
+        - name: minPrice
+          in: query
+          description: Minimum price filter
+          schema:
+            type: number
+            format: double
+            example: 10.0
+        - name: maxPrice
+          in: query
+          description: Maximum price filter
+          schema:
+            type: number
+            format: double
+            example: 20.0
+      responses:
+        '200':
+          description: Search results returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResponse'
+
+  /api/inventory/{bookId}:
+    put:
+      tags:
+        - Inventory Management
+      summary: Update book inventory
+      description: Updates the inventory quantity and low stock threshold for a book
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          description: ID of the book
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryRequest'
+      responses:
+        '200':
+          description: Inventory updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryResponse'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Inventory Management
+      summary: Get inventory status
+      description: Retrieves the current inventory status for a specific book
+      security: []
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          description: ID of the book
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: Inventory status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryResponse'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/inventory/{bookId}/decrease:
+    put:
+      tags:
+        - Inventory Management
+      summary: Decrease book inventory
+      description: Decreases the inventory quantity for a book (used during order processing)
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          description: ID of the book
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quantity
+              properties:
+                quantity:
+                  type: integer
+                  example: 5
+                  description: "Quantity to decrease"
+      responses:
+        '200':
+          description: Inventory decreased successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryResponse'
+        '400':
+          description: Insufficient stock
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/inventory/low-stock:
+    get:
+      tags:
+        - Inventory Management
+      summary: Get low stock books
+      description: Retrieves all books that are currently below their low stock threshold
+      responses:
+        '200':
+          description: Low stock books returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InventoryResponse'
+
+tags:
+  - name: Books
+    description: Endpoints for managing books in the inventory
+  - name: Search & Discovery
+    description: Endpoints for searching and discovering books
+  - name: Inventory Management
+    description: Endpoints for managing book inventory and stock levels

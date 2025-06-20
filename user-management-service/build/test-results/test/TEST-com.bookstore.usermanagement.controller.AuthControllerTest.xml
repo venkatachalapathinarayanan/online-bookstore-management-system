@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.usermanagement.controller.AuthControllerTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:48:14.470Z" hostname="INCHEL-8WFYB24" time="2.594">
+  <properties/>
+  <testcase name="login should return 401 when password is incorrect()" classname="com.bookstore.usermanagement.controller.AuthControllerTest" time="2.083"/>
+  <testcase name="login should return 401 when user not found()" classname="com.bookstore.usermanagement.controller.AuthControllerTest" time="0.058"/>
+  <testcase name="login should return JWT token when credentials are valid()" classname="com.bookstore.usermanagement.controller.AuthControllerTest" time="0.214"/>
+  <testcase name="login should return 400 when request body is invalid()" classname="com.bookstore.usermanagement.controller.AuthControllerTest" time="0.231"/>
+  <system-out><![CDATA[17:18:14.502 [Test worker] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+17:18:14.502 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+17:18:14.503 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+17:18:16.583 [Test worker] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+17:18:16.584 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+17:18:16.584 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+17:18:16.638 [Test worker] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+17:18:16.639 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+17:18:16.639 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+17:18:16.852 [Test worker] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+17:18:16.853 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+17:18:16.855 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 1 ms
+17:18:17.063 [Test worker] WARN org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver -- Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.bookstore.usermanagement.dto.LoginResponseDTO> com.bookstore.usermanagement.controller.AuthController.login(com.bookstore.usermanagement.dto.LoginRequestDTO) with 2 errors: [Field error in object 'loginRequestDTO' on field 'password': rejected value []; codes [NotBlank.loginRequestDTO.password,NotBlank.password,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequestDTO.password,password]; arguments []; default message [password]]; default message [Password is required]] [Field error in object 'loginRequestDTO' on field 'username': rejected value []; codes [NotBlank.loginRequestDTO.username,NotBlank.username,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequestDTO.username,username]; arguments []; default message [username]]; default message [Username is required]] ]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

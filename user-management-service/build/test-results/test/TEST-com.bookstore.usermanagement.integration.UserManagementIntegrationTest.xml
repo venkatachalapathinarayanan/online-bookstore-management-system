@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.usermanagement.integration.UserManagementIntegrationTest" tests="5" skipped="5" failures="0" errors="0" timestamp="2025-06-20T11:48:17.158Z" hostname="INCHEL-8WFYB24" time="0.006">
+  <properties/>
+  <testcase name="should create user and then retrieve it()" classname="com.bookstore.usermanagement.integration.UserManagementIntegrationTest" time="0.002">
+    <skipped/>
+  </testcase>
+  <testcase name="should return 400 when creating user with invalid data()" classname="com.bookstore.usermanagement.integration.UserManagementIntegrationTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="should create user and then delete it()" classname="com.bookstore.usermanagement.integration.UserManagementIntegrationTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="should return 409 when creating user with duplicate username()" classname="com.bookstore.usermanagement.integration.UserManagementIntegrationTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="should create user and then update it()" classname="com.bookstore.usermanagement.integration.UserManagementIntegrationTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

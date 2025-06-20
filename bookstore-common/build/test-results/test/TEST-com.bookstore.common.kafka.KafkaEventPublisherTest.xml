@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.common.kafka.KafkaEventPublisherTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:43:22.319Z" hostname="INCHEL-8WFYB24" time="5.47">
+  <properties/>
+  <testcase name="publish sends event to kafka()" classname="com.bookstore.common.kafka.KafkaEventPublisherTest" time="5.47"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

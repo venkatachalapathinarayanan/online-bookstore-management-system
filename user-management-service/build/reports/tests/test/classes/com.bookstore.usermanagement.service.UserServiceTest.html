@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - UserServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>UserServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.bookstore.usermanagement.service.html">com.bookstore.usermanagement.service</a> &gt; UserServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">11</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.426s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">addUser should create new user successfully()</td>
+<td class="success">0.091s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">addUser should throw exception when username already exists()</td>
+<td class="success">0.076s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteUser should delete existing user successfully()</td>
+<td class="success">0.023s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteUser should throw exception when user not found()</td>
+<td class="success">0.032s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getAllUsers should return list of usernames()</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getUser should return user when found()</td>
+<td class="success">0.026s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getUser should throw exception when user not found()</td>
+<td class="success">0.017s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">listUsers should return all users()</td>
+<td class="success">0.014s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateUser should throw exception when new username already exists()</td>
+<td class="success">0.033s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateUser should throw exception when user not found()</td>
+<td class="success">0.040s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateUser should update existing user successfully()</td>
+<td class="success">0.062s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>17:18:22.116 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Fetching user with id: 1
+17:18:22.139 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Listing all users
+17:18:22.155 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Fetching user with id: 999
+17:18:22.155 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- User not found for id: 999
+17:18:22.196 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Updating user with id: 1
+17:18:22.199 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- Username already exists: existinguser
+17:18:22.232 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Deleting user with id: 1
+17:18:22.232 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- User deleted successfully: 1
+17:18:22.260 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Deleting user with id: 999
+17:18:22.262 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- User not found for id: 999
+17:18:22.294 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Request to add user: existinguser
+17:18:22.296 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- Username already exists: existinguser
+17:18:22.403 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Request to add user: testuser
+17:18:22.405 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- User created successfully: testuser
+17:18:22.485 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Updating user with id: 1
+17:18:22.487 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- User updated successfully: updateduser
+17:18:22.539 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Updating user with id: 999
+17:18:22.540 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- User not found for id: 999
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 8.14.2</a> at 20-Jun-2025, 5:18:23 pm</p>
+</div>
+</div>
+</body>
+</html>

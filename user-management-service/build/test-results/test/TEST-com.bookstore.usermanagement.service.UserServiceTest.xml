@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.usermanagement.service.UserServiceTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:48:22.105Z" hostname="INCHEL-8WFYB24" time="0.459">
+  <properties/>
+  <testcase name="getUser should return user when found()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.026"/>
+  <testcase name="listUsers should return all users()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.014"/>
+  <testcase name="getUser should throw exception when user not found()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.017"/>
+  <testcase name="getAllUsers should return list of usernames()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.012"/>
+  <testcase name="updateUser should throw exception when new username already exists()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.033"/>
+  <testcase name="deleteUser should delete existing user successfully()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.023"/>
+  <testcase name="deleteUser should throw exception when user not found()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.032"/>
+  <testcase name="addUser should throw exception when username already exists()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.076"/>
+  <testcase name="addUser should create new user successfully()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.091"/>
+  <testcase name="updateUser should update existing user successfully()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.062"/>
+  <testcase name="updateUser should throw exception when user not found()" classname="com.bookstore.usermanagement.service.UserServiceTest" time="0.04"/>
+  <system-out><![CDATA[17:18:22.116 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Fetching user with id: 1
+17:18:22.139 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Listing all users
+17:18:22.155 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Fetching user with id: 999
+17:18:22.155 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- User not found for id: 999
+17:18:22.196 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Updating user with id: 1
+17:18:22.199 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- Username already exists: existinguser
+17:18:22.232 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Deleting user with id: 1
+17:18:22.232 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- User deleted successfully: 1
+17:18:22.260 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Deleting user with id: 999
+17:18:22.262 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- User not found for id: 999
+17:18:22.294 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Request to add user: existinguser
+17:18:22.296 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- Username already exists: existinguser
+17:18:22.403 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Request to add user: testuser
+17:18:22.405 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- User created successfully: testuser
+17:18:22.485 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Updating user with id: 1
+17:18:22.487 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- User updated successfully: updateduser
+17:18:22.539 [Test worker] INFO com.bookstore.usermanagement.service.UserService -- Updating user with id: 999
+17:18:22.540 [Test worker] WARN com.bookstore.usermanagement.service.UserService -- User not found for id: 999
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

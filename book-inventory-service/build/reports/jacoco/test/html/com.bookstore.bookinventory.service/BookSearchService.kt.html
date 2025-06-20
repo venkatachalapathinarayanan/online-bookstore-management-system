@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookSearchService.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">book-inventory-service</a> &gt; <a href="index.source.html" class="el_package">com.bookstore.bookinventory.service</a> &gt; <span class="el_source">BookSearchService.kt</span></div><h1>BookSearchService.kt</h1><pre class="source lang-java linenums">package com.bookstore.bookinventory.service
+
+import com.bookstore.bookinventory.dto.BookResponseDTO
+import com.bookstore.bookinventory.dto.BookSearchRequestDTO
+import com.bookstore.bookinventory.model.Book
+import com.bookstore.bookinventory.repository.BookInventoryRepository
+import com.bookstore.bookinventory.repository.BookPriceRepository
+import com.bookstore.bookinventory.repository.BookRepository
+import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.stereotype.Service
+
+<span class="fc" id="L17">@Service</span>
+<span class="fc" id="L18">class BookSearchService(</span>
+<span class="fc" id="L19">    private val bookRepository: BookRepository,</span>
+<span class="fc" id="L20">    private val bookPriceRepository: BookPriceRepository,</span>
+<span class="fc" id="L21">    private val bookInventoryRepository: BookInventoryRepository</span>
+) {
+<span class="fc" id="L23">    private val logger = LoggerFactory.getLogger(BookSearchService::class.java)</span>
+
+    fun searchBooks(request: BookSearchRequestDTO): Page&lt;BookResponseDTO&gt; {
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">        val sort = if (request.sortDir.equals(&quot;desc&quot;, true)) Sort.by(request.sortBy).descending() else Sort.by(request.sortBy).ascending()</span>
+<span class="fc" id="L27">        val pageable: Pageable = PageRequest.of(request.page, request.size, sort)</span>
+<span class="fc" id="L28">        val books = bookRepository.findByIsDeletedFalse()</span>
+<span class="fc" id="L29">            .filter { book -&gt;</span>
+<span class="pc bpc" id="L30" title="6 of 8 branches missed.">                (request.title.isNullOrBlank() || book.title.contains(request.title, ignoreCase = true)) &amp;&amp;</span>
+<span class="pc bpc" id="L31" title="6 of 8 branches missed.">                (request.author.isNullOrBlank() || book.author.contains(request.author, ignoreCase = true)) &amp;&amp;</span>
+<span class="pc bpc" id="L32" title="6 of 8 branches missed.">                (request.genre.isNullOrBlank() || book.genre.equals(request.genre, ignoreCase = true)) &amp;&amp;</span>
+<span class="pc bpc" id="L33" title="6 of 8 branches missed.">                (request.isbn.isNullOrBlank() || book.isbn.equals(request.isbn, ignoreCase = true))</span>
+            }
+<span class="fc" id="L35">            .filter { book -&gt;</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">                val price = bookPriceRepository.findByBookId(book.id)?.price ?: 0.0</span>
+<span class="pc bpc" id="L37" title="3 of 4 branches missed.">                (request.minPrice == null || price &gt;= request.minPrice) &amp;&amp;</span>
+<span class="pc bpc" id="L38" title="3 of 4 branches missed.">                (request.maxPrice == null || price &lt;= request.maxPrice)</span>
+            }
+<span class="fc" id="L40">            .filter { book -&gt;</span>
+<span class="pc bpc" id="L41" title="6 of 8 branches missed.">                (request.genreFilter.isNullOrBlank() || book.genre.equals(request.genreFilter, ignoreCase = true))</span>
+            }
+<span class="fc" id="L43">            .filter { book -&gt;</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">                if (request.availableOnly == true) {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">                    val quantity = bookInventoryRepository.findByBookId(book.id)?.quantity ?: 0</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">                    quantity &gt; 0</span>
+<span class="fc" id="L47">                } else true</span>
+            }
+<span class="pc" id="L49">        val sortedBooks = books.sortedWith(compareBy(</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">            if (request.sortDir.equals(&quot;desc&quot;, true)) {</span>
+                { book: Book -&gt;
+<span class="nc bnc" id="L52" title="All 13 branches missed.">                    when (request.sortBy) {</span>
+<span class="nc" id="L53">                        &quot;title&quot; -&gt; book.title</span>
+<span class="nc" id="L54">                        &quot;author&quot; -&gt; book.author</span>
+<span class="nc" id="L55">                        &quot;genre&quot; -&gt; book.genre</span>
+<span class="nc" id="L56">                        &quot;isbn&quot; -&gt; book.isbn</span>
+<span class="nc" id="L57">                        else -&gt; book.title</span>
+                    }
+                }
+            } else {
+                { book: Book -&gt;
+<span class="nc bnc" id="L62" title="All 13 branches missed.">                    when (request.sortBy) {</span>
+<span class="nc" id="L63">                        &quot;title&quot; -&gt; book.title</span>
+<span class="nc" id="L64">                        &quot;author&quot; -&gt; book.author</span>
+<span class="nc" id="L65">                        &quot;genre&quot; -&gt; book.genre</span>
+<span class="nc" id="L66">                        &quot;isbn&quot; -&gt; book.isbn</span>
+<span class="nc" id="L67">                        else -&gt; book.title</span>
+                    }
+                }
+            }
+        ))
+<span class="fc" id="L72">        val start = pageable.offset.toInt()</span>
+<span class="fc" id="L73">        val end = (start + pageable.pageSize).coerceAtMost(sortedBooks.size)</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        val pageContent = if (start &lt;= end) sortedBooks.subList(start, end) else emptyList()</span>
+<span class="fc" id="L75">        val responseList = pageContent.map { book -&gt;</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">            val price = bookPriceRepository.findByBookId(book.id)?.price ?: 0.0</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">            val quantity = bookInventoryRepository.findByBookId(book.id)?.quantity ?: 0</span>
+<span class="fc" id="L78">            BookResponseDTO(</span>
+<span class="fc" id="L79">                id = book.id,</span>
+<span class="fc" id="L80">                title = book.title,</span>
+<span class="fc" id="L81">                author = book.author,</span>
+<span class="fc" id="L82">                genre = book.genre,</span>
+<span class="fc" id="L83">                isbn = book.isbn,</span>
+<span class="fc" id="L84">                price = price,</span>
+<span class="fc" id="L85">                quantity = quantity,</span>
+<span class="fc" id="L86">                createdAt = book.createdAt,</span>
+<span class="fc" id="L87">                updatedAt = book.updatedAt,</span>
+<span class="fc" id="L88">                isDeleted = book.isDeleted</span>
+            )
+        }
+<span class="fc" id="L91">        return PageImpl(responseList, pageable, sortedBooks.size.toLong())</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

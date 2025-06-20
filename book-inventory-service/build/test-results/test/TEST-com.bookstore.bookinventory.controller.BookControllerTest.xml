@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.bookinventory.controller.BookControllerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:19:53.312Z" hostname="INCHEL-8WFYB24" time="5.436">
+  <properties/>
+  <testcase name="getBook returns book()" classname="com.bookstore.bookinventory.controller.BookControllerTest" time="2.88"/>
+  <testcase name="updateBook returns updated book()" classname="com.bookstore.bookinventory.controller.BookControllerTest" time="0.08"/>
+  <testcase name="listBooks returns list()" classname="com.bookstore.bookinventory.controller.BookControllerTest" time="2.337"/>
+  <testcase name="softDeleteBook returns no content()" classname="com.bookstore.bookinventory.controller.BookControllerTest" time="0.102"/>
+  <testcase name="createBook returns created response()" classname="com.bookstore.bookinventory.controller.BookControllerTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

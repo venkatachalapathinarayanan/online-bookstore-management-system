@@ -1,0 +1,545 @@
+openapi: 3.0.3
+info:
+  title: 📱 User Management Service API
+  version: 1.0.0
+  description: |
+    # User Management Service API
+    
+    Complete user management system with authentication and authorization.
+    
+    ## Features
+    - 🔐 **User Authentication:** Login with JWT token generation
+    - 👥 **User Management:** CRUD operations for regular users
+    - 👨‍💼 **Admin Management:** CRUD operations for admin users
+    - 🛡️ **Security:** JWT-based authentication with role-based access control
+    
+    ## Authentication
+    Most endpoints require authentication using a Bearer JWT token:
+    1. Login via `/api/auth/login` to get your JWT token
+    2. Include the token in the Authorization header: `Bearer <your-jwt-token>`
+    
+    ## Roles
+    - **USER:** Can manage their own profile
+    - **ADMIN:** Can manage all users and admin accounts
+    
+    ## Quick Start
+    1. Create a user account via `POST /api/users`
+    2. Login via `POST /api/auth/login` to get JWT token
+    3. Use the token to access protected endpoints
+  contact:
+    name: Bookstore Development Team
+    email: support@bookstore.com
+    url: https://bookstore.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://localhost:8081
+    description: Local Development Server
+  - url: https://api.bookstore.com/user-service
+    description: Production Server
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter JWT Bearer token in the format Bearer <token>
+
+  schemas:
+    UserRequest:
+      type: object
+      required:
+        - userName
+        - password
+        - email
+        - fullName
+      properties:
+        userName:
+          type: string
+          example: "john_doe"
+          description: "Unique username for the user"
+        password:
+          type: string
+          format: password
+          example: "SecurePass123!"
+          description: "User password (minimum 8 characters)"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+          description: "User email address"
+        fullName:
+          type: string
+          example: "John Doe"
+          description: "Full name of the user"
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        userName:
+          type: string
+          example: "john_doe"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+        fullName:
+          type: string
+          example: "John Doe"
+        role:
+          type: string
+          enum: [USER, ADMIN]
+          example: "USER"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "john_doe"
+          description: "Username for authentication"
+        password:
+          type: string
+          format: password
+          example: "SecurePass123!"
+          description: "User password"
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          description: "JWT authentication token"
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00.000+00:00"
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: "Bad Request"
+        message:
+          type: string
+          example: "Validation failed"
+        path:
+          type: string
+          example: "/api/users"
+
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticates a user with username and password, returns JWT token for subsequent API calls
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful, JWT token returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid username or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/users:
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      description: Registers a new user in the system with USER role
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Username or email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Users
+      summary: List all users
+      description: Retrieves a list of all registered users
+      responses:
+        '200':
+          description: List of users returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+
+  /api/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      description: Retrieves user details by their unique ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: User found and returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Users
+      summary: Update user
+      description: Updates user information by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Username or email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: Removes a user from the system by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/admins:
+    post:
+      tags:
+        - Admin Management
+      summary: Create admin user
+      description: Creates a new admin user with ADMIN role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: Admin user created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - admin privileges required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Username or email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Admin Management
+      summary: List all admin users
+      description: Retrieves a list of all admin users
+      responses:
+        '200':
+          description: List of admin users returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - admin privileges required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/admins/{id}:
+    get:
+      tags:
+        - Admin Management
+      summary: Get admin user by ID
+      description: Retrieves admin user details by their unique ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Admin user ID
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: Admin user found and returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - admin privileges required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Admin user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Admin Management
+      summary: Update admin user
+      description: Updates admin user information by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Admin user ID
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: Admin user updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - admin privileges required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Admin user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Username or email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Admin Management
+      summary: Delete admin user
+      description: Removes an admin user from the system by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Admin user ID
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '204':
+          description: Admin user deleted successfully
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - admin privileges required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Admin user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+tags:
+  - name: Authentication
+    description: Endpoints for user authentication and authorization
+  - name: Users
+    description: Endpoints for managing regular users
+  - name: Admin Management
+    description: Endpoints for managing admin users (requires ADMIN privileges) 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.bookinventory.service.BookServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:20:04.523Z" hostname="INCHEL-8WFYB24" time="0.945">
+  <properties/>
+  <testcase name="getBook returns BookResponseDTO()" classname="com.bookstore.bookinventory.service.BookServiceTest" time="0.302"/>
+  <testcase name="updateBook returns updated BookResponseDTO()" classname="com.bookstore.bookinventory.service.BookServiceTest" time="0.393"/>
+  <testcase name="listBooks returns list of BookResponseDTO()" classname="com.bookstore.bookinventory.service.BookServiceTest" time="0.026"/>
+  <testcase name="createBook returns BookResponseDTO()" classname="com.bookstore.bookinventory.service.BookServiceTest" time="0.166"/>
+  <testcase name="softDeleteBook marks book as deleted()" classname="com.bookstore.bookinventory.service.BookServiceTest" time="0.043"/>
+  <system-out><![CDATA[16:50:04.768 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Fetching book with id: 1
+16:50:05.208 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Updating book with id: 1
+16:50:05.221 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Book updated successfully: 1
+16:50:05.252 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Listing all books
+16:50:05.422 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Creating book: title
+16:50:05.423 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Book created successfully: 1
+16:50:05.458 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Soft deleting book with id: 1
+16:50:05.458 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Book soft deleted: 1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderService.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">order-management-service</a> &gt; <a href="index.source.html" class="el_package">com.bookstore.ordermanagement.service</a> &gt; <span class="el_source">OrderService.kt</span></div><h1>OrderService.kt</h1><pre class="source lang-java linenums">package com.bookstore.ordermanagement.service
+
+import com.bookstore.common.event.EventMessage
+import com.bookstore.common.kafka.KafkaEventPublisher
+import com.bookstore.ordermanagement.dto.OrderRequestDTO
+import com.bookstore.ordermanagement.dto.OrderResponseDTO
+import com.bookstore.ordermanagement.dto.OrderItemRequestDTO
+import com.bookstore.ordermanagement.dto.OrderItemResponseDTO
+import com.bookstore.ordermanagement.model.Order
+import com.bookstore.ordermanagement.model.OrderItem
+import com.bookstore.ordermanagement.repository.OrderRepository
+import com.bookstore.ordermanagement.repository.CartRepository
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+<span class="fc" id="L17">@Service</span>
+<span class="fc" id="L18">class OrderService(</span>
+<span class="fc" id="L19">    private val orderRepository: OrderRepository,</span>
+<span class="fc" id="L20">    private val kafkaEventPublisher: KafkaEventPublisher,</span>
+<span class="fc" id="L21">    private val cartRepository: CartRepository</span>
+) {
+<span class="fc" id="L23">    private val logger = LoggerFactory.getLogger(OrderService::class.java)</span>
+
+    @Transactional
+    fun createOrder(request: OrderRequestDTO): OrderResponseDTO {
+<span class="fc" id="L27">        val order = Order(</span>
+<span class="fc" id="L28">            userId = request.userId,</span>
+<span class="fc" id="L29">            items = request.items.map {</span>
+<span class="fc" id="L30">                OrderItem(</span>
+<span class="fc" id="L31">                    bookId = it.bookId,</span>
+<span class="fc" id="L32">                    quantity = it.quantity,</span>
+<span class="fc" id="L33">                    price = it.price</span>
+                )
+<span class="fc" id="L35">            }.toMutableList()</span>
+        )
+<span class="fc" id="L37">        order.items.forEach { it.order = order }</span>
+<span class="fc" id="L38">        val saved = orderRepository.save(order)</span>
+<span class="fc" id="L39">        logger.info(&quot;Order created successfully: {}&quot;, saved.id)</span>
+        // Publish OrderCreated event
+<span class="fc" id="L41">        val event = EventMessage(</span>
+<span class="fc" id="L42">            eventType = &quot;OrderCreated&quot;,</span>
+<span class="fc" id="L43">            payload = mapOf(</span>
+<span class="fc" id="L44">                &quot;orderId&quot; to saved.id,</span>
+<span class="fc" id="L45">                &quot;userId&quot; to saved.userId,</span>
+<span class="fc" id="L46">                &quot;items&quot; to saved.items.map { mapOf(</span>
+<span class="fc" id="L47">                    &quot;bookId&quot; to it.bookId,</span>
+<span class="fc" id="L48">                    &quot;quantity&quot; to it.quantity,</span>
+<span class="fc" id="L49">                    &quot;price&quot; to it.price</span>
+                ) }
+            )
+        )
+<span class="fc" id="L53">        kafkaEventPublisher.publish(&quot;order-events&quot;, event)</span>
+<span class="fc" id="L54">        return OrderResponseDTO(</span>
+<span class="fc" id="L55">            id = saved.id,</span>
+<span class="fc" id="L56">            userId = saved.userId,</span>
+<span class="fc" id="L57">            items = saved.items.map { OrderItemResponseDTO(it.bookId, it.quantity, it.price) },</span>
+<span class="fc" id="L58">            status = saved.status</span>
+        )
+    }
+
+    @Transactional
+    fun createOrderFromCart(userId: Long): OrderResponseDTO {
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        val cart = cartRepository.findByUserId(userId) ?: throw NoSuchElementException(&quot;Cart not found for user $userId&quot;)</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (cart.items.isEmpty()) throw IllegalStateException(&quot;Cart is empty&quot;)</span>
+<span class="nc" id="L66">        val order = Order(</span>
+<span class="nc" id="L67">            userId = userId,</span>
+<span class="nc" id="L68">            items = cart.items.map {</span>
+<span class="nc" id="L69">                OrderItem(</span>
+<span class="nc" id="L70">                    bookId = it.bookId,</span>
+<span class="nc" id="L71">                    quantity = it.quantity,</span>
+<span class="nc" id="L72">                    price = 0.0 // You may want to fetch price from inventory or another service</span>
+                )
+<span class="nc" id="L74">            }.toMutableList()</span>
+        )
+<span class="nc" id="L76">        order.items.forEach { it.order = order }</span>
+<span class="nc" id="L77">        val saved = orderRepository.save(order)</span>
+<span class="nc" id="L78">        cartRepository.deleteByUserId(userId)</span>
+<span class="nc" id="L79">        logger.info(&quot;Order created from cart for user {}: orderId={}&quot;, userId, saved.id)</span>
+        // Publish OrderCreated event
+<span class="nc" id="L81">        val event = EventMessage(</span>
+<span class="nc" id="L82">            eventType = &quot;OrderCreated&quot;,</span>
+<span class="nc" id="L83">            payload = mapOf(</span>
+<span class="nc" id="L84">                &quot;orderId&quot; to saved.id,</span>
+<span class="nc" id="L85">                &quot;userId&quot; to saved.userId,</span>
+<span class="nc" id="L86">                &quot;items&quot; to saved.items.map { mapOf(</span>
+<span class="nc" id="L87">                    &quot;bookId&quot; to it.bookId,</span>
+<span class="nc" id="L88">                    &quot;quantity&quot; to it.quantity,</span>
+<span class="nc" id="L89">                    &quot;price&quot; to it.price</span>
+                ) }
+            )
+        )
+<span class="nc" id="L93">        kafkaEventPublisher.publish(&quot;order-events&quot;, event)</span>
+<span class="nc" id="L94">        return OrderResponseDTO(</span>
+<span class="nc" id="L95">            id = saved.id,</span>
+<span class="nc" id="L96">            userId = saved.userId,</span>
+<span class="nc" id="L97">            items = saved.items.map { OrderItemResponseDTO(it.bookId, it.quantity, it.price) },</span>
+<span class="nc" id="L98">            status = saved.status</span>
+        )
+    }
+
+    fun getOrderStatus(orderId: Long): String {
+<span class="pc" id="L103">        val order = orderRepository.findById(orderId).orElseThrow { NoSuchElementException(&quot;Order not found&quot;) }</span>
+<span class="fc" id="L104">        return order.status</span>
+    }
+
+    fun getOrderHistory(userId: Long): List&lt;OrderResponseDTO&gt; {
+<span class="fc" id="L108">        return orderRepository.findAll()</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            .filter { it.userId == userId }</span>
+<span class="fc" id="L110">            .map { order -&gt;</span>
+<span class="fc" id="L111">                OrderResponseDTO(</span>
+<span class="fc" id="L112">                    id = order.id,</span>
+<span class="fc" id="L113">                    userId = order.userId,</span>
+<span class="fc" id="L114">                    items = order.items.map { OrderItemResponseDTO(it.bookId, it.quantity, it.price) },</span>
+<span class="fc" id="L115">                    status = order.status</span>
+                )
+            }
+    }
+
+    @Transactional
+    fun confirmPayment(orderId: Long): OrderResponseDTO {
+<span class="pc" id="L122">        val order = orderRepository.findById(orderId).orElseThrow { NoSuchElementException(&quot;Order not found&quot;) }</span>
+<span class="fc" id="L123">        val updatedOrder = order.copy(status = &quot;PAID&quot;)</span>
+<span class="fc" id="L124">        val saved = orderRepository.save(updatedOrder)</span>
+<span class="fc" id="L125">        logger.info(&quot;Payment confirmed for order {}&quot;, saved.id)</span>
+        // Publish OrderPaid event
+<span class="fc" id="L127">        val event = EventMessage(</span>
+<span class="fc" id="L128">            eventType = &quot;OrderPaid&quot;,</span>
+<span class="fc" id="L129">            payload = mapOf(</span>
+<span class="fc" id="L130">                &quot;orderId&quot; to saved.id,</span>
+<span class="fc" id="L131">                &quot;userId&quot; to saved.userId,</span>
+<span class="fc" id="L132">                &quot;items&quot; to saved.items.map { mapOf(</span>
+<span class="fc" id="L133">                    &quot;bookId&quot; to it.bookId,</span>
+<span class="fc" id="L134">                    &quot;quantity&quot; to it.quantity,</span>
+<span class="fc" id="L135">                    &quot;price&quot; to it.price</span>
+                ) }
+            )
+        )
+<span class="fc" id="L139">        kafkaEventPublisher.publish(&quot;order-events&quot;, event)</span>
+<span class="fc" id="L140">        return OrderResponseDTO(</span>
+<span class="fc" id="L141">            id = saved.id,</span>
+<span class="fc" id="L142">            userId = saved.userId,</span>
+<span class="fc" id="L143">            items = saved.items.map { OrderItemResponseDTO(it.bookId, it.quantity, it.price) },</span>
+<span class="fc" id="L144">            status = saved.status</span>
+        )
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminUserService.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">user-management-service</a> &gt; <a href="index.source.html" class="el_package">com.bookstore.usermanagement.service</a> &gt; <span class="el_source">AdminUserService.kt</span></div><h1>AdminUserService.kt</h1><pre class="source lang-java linenums">package com.bookstore.usermanagement.service
+
+import com.bookstore.usermanagement.dto.UserRequestDTO
+import com.bookstore.usermanagement.dto.UserResponseDTO
+import com.bookstore.usermanagement.model.User
+import com.bookstore.usermanagement.model.UserBuilder
+import com.bookstore.usermanagement.repository.UserRepository
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.security.access.prepost.PreAuthorize
+import java.util.NoSuchElementException
+import org.slf4j.LoggerFactory
+import org.springframework.web.server.ResponseStatusException
+import org.springframework.http.HttpStatus
+
+<span class="fc" id="L17">@Service</span>
+<span class="fc" id="L18">class AdminUserService(private val userRepository: UserRepository, private val passwordEncoder: PasswordEncoder) {</span>
+<span class="fc" id="L19">    private val logger = LoggerFactory.getLogger(AdminUserService::class.java)</span>
+
+    @PreAuthorize(&quot;hasAuthority('SUPERADMIN')&quot;)
+    fun addAdmin(request: UserRequestDTO): UserResponseDTO {
+<span class="fc" id="L23">        logger.info(&quot;Request to add admin user: {}&quot;, request.userName)</span>
+<span class="fc" id="L24">        try {</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">            if (userRepository.existsByUserName(request.userName)) {</span>
+<span class="fc" id="L26">                logger.warn(&quot;Username already exists: {}&quot;, request.userName)</span>
+<span class="fc" id="L27">                throw ResponseStatusException(HttpStatus.CONFLICT, &quot;Username already exists&quot;)</span>
+            }
+<span class="fc" id="L29">            val user = UserBuilder()</span>
+<span class="fc" id="L30">                .userName(request.userName)</span>
+<span class="fc" id="L31">                .fullName(request.fullName)</span>
+<span class="fc" id="L32">                .email(request.email)</span>
+<span class="fc" id="L33">                .password(passwordEncoder.encode(request.password))</span>
+<span class="fc" id="L34">                .phoneNumber(request.phoneNumber)</span>
+<span class="fc" id="L35">                .address(request.address)</span>
+<span class="fc" id="L36">                .role(&quot;ADMIN&quot;)</span>
+<span class="fc" id="L37">                .build()</span>
+<span class="fc" id="L38">            val saved = userRepository.save(user)</span>
+<span class="fc" id="L39">            logger.info(&quot;Admin user created successfully: {}&quot;, saved.userName)</span>
+<span class="fc" id="L40">            return saved.toResponseDTO()</span>
+<span class="fc" id="L41">        } catch (ex: ResponseStatusException) {</span>
+<span class="fc" id="L42">            throw ex</span>
+<span class="nc" id="L43">        } catch (ex: Exception) {</span>
+<span class="nc" id="L44">            logger.error(&quot;Unexpected error creating admin user: {}&quot;, request.userName, ex)</span>
+<span class="nc" id="L45">            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, &quot;Unexpected error occurred&quot;)</span>
+        }
+    }
+
+    @PreAuthorize(&quot;hasAuthority('SUPERADMIN') or #id == authentication.principal.id&quot;)
+    fun getAdmin(id: Long): UserResponseDTO {
+<span class="fc" id="L51">        logger.info(&quot;Fetching admin user with id: {}&quot;, id)</span>
+<span class="fc" id="L52">        return try {</span>
+<span class="fc" id="L53">            userRepository.findById(id)</span>
+<span class="fc" id="L54">                .filter { it.role == &quot;ADMIN&quot; }</span>
+<span class="fc" id="L55">                .map { it.toResponseDTO() }</span>
+<span class="fc" id="L56">                .orElseThrow {</span>
+<span class="fc" id="L57">                    logger.warn(&quot;Admin user not found for id: {}&quot;, id)</span>
+<span class="fc" id="L58">                    ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Admin user not found&quot;)</span>
+                }
+<span class="fc" id="L60">        } catch (ex: ResponseStatusException) {</span>
+<span class="fc" id="L61">            throw ex</span>
+<span class="nc" id="L62">        } catch (ex: Exception) {</span>
+<span class="nc" id="L63">            logger.error(&quot;Unexpected error getting admin user with id: {}&quot;, id, ex)</span>
+<span class="pc" id="L64">            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, &quot;Unexpected error occurred&quot;)</span>
+        }
+    }
+
+    @PreAuthorize(&quot;hasAuthority('SUPERADMIN')&quot;)
+    fun listAdmins(): List&lt;UserResponseDTO&gt; {
+<span class="fc" id="L70">        logger.info(&quot;Listing all admin users&quot;)</span>
+<span class="fc" id="L71">        return try {</span>
+<span class="fc" id="L72">            userRepository.findAll().filter { it.role == &quot;ADMIN&quot; }.map { it.toResponseDTO() }</span>
+<span class="nc" id="L73">        } catch (ex: Exception) {</span>
+<span class="nc" id="L74">            logger.error(&quot;Unexpected error listing admin users&quot;, ex)</span>
+<span class="pc" id="L75">            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, &quot;Unexpected error occurred&quot;)</span>
+        }
+    }
+
+    @PreAuthorize(&quot;hasAuthority('SUPERADMIN') or #id == authentication.principal.id&quot;)
+    @Transactional
+    fun updateAdmin(id: Long, request: UserRequestDTO): UserResponseDTO {
+<span class="fc" id="L82">        logger.info(&quot;Request to update admin user with id: {}&quot;, id)</span>
+<span class="fc" id="L83">        try {</span>
+<span class="fc" id="L84">            val user = userRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L85">                logger.warn(&quot;Admin user not found for id: {}&quot;, id)</span>
+<span class="fc" id="L86">                ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Admin user not found&quot;)</span>
+            }
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            if (user.role != &quot;ADMIN&quot;) {</span>
+<span class="fc" id="L89">                logger.warn(&quot;Not an admin user for id: {}&quot;, id)</span>
+<span class="fc" id="L90">                throw ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Not an admin user&quot;)</span>
+            }
+<span class="pc bpc" id="L92" title="2 of 4 branches missed.">            if (user.userName != request.userName &amp;&amp; userRepository.existsByUserName(request.userName)) {</span>
+<span class="nc" id="L93">                logger.warn(&quot;Username already exists: {}&quot;, request.userName)</span>
+<span class="nc" id="L94">                throw ResponseStatusException(HttpStatus.CONFLICT, &quot;Username already exists&quot;)</span>
+            }
+<span class="fc" id="L96">            val updated = user.copy(</span>
+<span class="fc" id="L97">                userName = request.userName,</span>
+<span class="fc" id="L98">                fullName = request.fullName,</span>
+<span class="fc" id="L99">                email = request.email,</span>
+<span class="fc" id="L100">                password = passwordEncoder.encode(request.password),</span>
+<span class="fc" id="L101">                phoneNumber = request.phoneNumber,</span>
+<span class="fc" id="L102">                address = request.address</span>
+            )
+<span class="fc" id="L104">            logger.info(&quot;Updating admin user with id: {}&quot;, id)</span>
+<span class="fc" id="L105">            return userRepository.save(updated).toResponseDTO()</span>
+<span class="fc" id="L106">        } catch (ex: ResponseStatusException) {</span>
+<span class="fc" id="L107">            throw ex</span>
+<span class="nc" id="L108">        } catch (ex: Exception) {</span>
+<span class="nc" id="L109">            logger.error(&quot;Unexpected error updating admin user with id: {}&quot;, id, ex)</span>
+<span class="nc" id="L110">            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, &quot;Unexpected error occurred&quot;)</span>
+        }
+    }
+
+    @PreAuthorize(&quot;hasAuthority('SUPERADMIN') or #id == authentication.principal.id&quot;)
+    fun deleteAdmin(id: Long) {
+<span class="fc" id="L116">        logger.info(&quot;Request to delete admin user with id: {}&quot;, id)</span>
+<span class="fc" id="L117">        try {</span>
+<span class="fc" id="L118">            val user = userRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L119">                logger.warn(&quot;Admin user not found for id: {}&quot;, id)</span>
+<span class="fc" id="L120">                ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Admin user not found&quot;)</span>
+            }
+<span class="fc bfc" id="L122" title="All 2 branches covered.">            if (user.role != &quot;ADMIN&quot;) {</span>
+<span class="fc" id="L123">                logger.warn(&quot;Not an admin user for id: {}&quot;, id)</span>
+<span class="fc" id="L124">                throw ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Not an admin user&quot;)</span>
+            }
+<span class="fc" id="L126">            logger.info(&quot;Deleting admin user with id: {}&quot;, id)</span>
+<span class="fc" id="L127">            userRepository.deleteById(id)</span>
+<span class="fc" id="L128">        } catch (ex: ResponseStatusException) {</span>
+<span class="fc" id="L129">            throw ex</span>
+<span class="nc" id="L130">        } catch (ex: Exception) {</span>
+<span class="nc" id="L131">            logger.error(&quot;Unexpected error deleting admin user with id: {}&quot;, id, ex)</span>
+<span class="nc" id="L132">            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, &quot;Unexpected error occurred&quot;)</span>
+        }
+<span class="fc" id="L134">    }</span>
+
+<span class="fc" id="L136">    private fun User.toResponseDTO(): UserResponseDTO = UserResponseDTO(</span>
+<span class="fc" id="L137">        id = this.id,</span>
+<span class="fc" id="L138">        userName = this.userName,</span>
+<span class="fc" id="L139">        fullName = this.fullName,</span>
+<span class="fc" id="L140">        email = this.email,</span>
+<span class="fc" id="L141">        phoneNumber = this.phoneNumber,</span>
+<span class="fc" id="L142">        address = this.address,</span>
+<span class="fc" id="L143">        role = this.role</span>
+<span class="fc" id="L144">    )</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,9 @@
+rootProject.name = "online-bookstore-mgmt-system"
+
+include(
+    "book-inventory-service",
+    "order-management-service",
+    "user-management-service",
+    "bookstore-common"
+)
+

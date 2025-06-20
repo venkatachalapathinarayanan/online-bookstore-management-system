@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.ordermanagement.service.CartServiceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:20:36.187Z" hostname="INCHEL-8WFYB24" time="3.248">
+  <properties/>
+  <testcase name="addToCart calls repository()" classname="com.bookstore.ordermanagement.service.CartServiceTest" time="3.11"/>
+  <testcase name="removeFromCart calls repository()" classname="com.bookstore.ordermanagement.service.CartServiceTest" time="0.079"/>
+  <testcase name="viewCart returns cart response()" classname="com.bookstore.ordermanagement.service.CartServiceTest" time="0.031"/>
+  <testcase name="clearCart calls repository()" classname="com.bookstore.ordermanagement.service.CartServiceTest" time="0.019"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

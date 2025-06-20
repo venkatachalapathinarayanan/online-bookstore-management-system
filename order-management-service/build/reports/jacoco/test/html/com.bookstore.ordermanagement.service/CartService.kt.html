@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CartService.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">order-management-service</a> &gt; <a href="index.source.html" class="el_package">com.bookstore.ordermanagement.service</a> &gt; <span class="el_source">CartService.kt</span></div><h1>CartService.kt</h1><pre class="source lang-java linenums">package com.bookstore.ordermanagement.service
+
+import com.bookstore.ordermanagement.dto.*
+import com.bookstore.ordermanagement.model.Cart
+import com.bookstore.ordermanagement.model.CartItem
+import com.bookstore.ordermanagement.repository.CartRepository
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+<span class="fc" id="L10">@Service</span>
+<span class="fc" id="L11">class CartService(private val cartRepository: CartRepository) {</span>
+    @Transactional
+    fun addToCart(request: AddToCartRequestDTO) {
+<span class="pc bpc" id="L14" title="1 of 2 branches missed.">        val cart = cartRepository.findByUserId(request.userId) ?: Cart(userId = request.userId)</span>
+<span class="pc bpc" id="L15" title="5 of 6 branches missed.">        val existingItem = cart.items.find { it.bookId == request.bookId }</span>
+<span class="pc bpc" id="L16" title="1 of 2 branches missed.">        if (existingItem != null) {</span>
+<span class="nc" id="L17">            existingItem.quantity += request.quantity</span>
+        } else {
+<span class="fc" id="L19">            val newItem = CartItem(bookId = request.bookId, quantity = request.quantity, cart = cart)</span>
+<span class="fc" id="L20">            cart.items.add(newItem)</span>
+        }
+<span class="fc" id="L22">        cartRepository.save(cart)</span>
+<span class="fc" id="L23">    }</span>
+
+    @Transactional
+    fun removeFromCart(request: RemoveFromCartRequestDTO) {
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">        val cart = cartRepository.findByUserId(request.userId) ?: return</span>
+<span class="pc bnc" id="L28" title="All 2 branches missed.">        cart.items.removeIf { it.bookId == request.bookId }</span>
+<span class="fc" id="L29">        cartRepository.save(cart)</span>
+<span class="fc" id="L30">    }</span>
+
+    fun viewCart(userId: Long): CartResponseDTO {
+<span class="fc" id="L33">        val cart = cartRepository.findByUserId(userId)</span>
+<span class="pc bpc" id="L34" title="2 of 4 branches missed.">        val items = cart?.items?.map { CartItemDTO(bookId = it.bookId, quantity = it.quantity) } ?: emptyList()</span>
+<span class="fc" id="L35">        return CartResponseDTO(userId = userId, items = items)</span>
+    }
+
+    @Transactional
+    fun clearCart(userId: Long) {
+<span class="fc" id="L40">        cartRepository.deleteByUserId(userId)</span>
+<span class="fc" id="L41">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

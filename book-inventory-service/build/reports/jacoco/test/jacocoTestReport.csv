@@ -1,0 +1,10 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+book-inventory-service,com.bookstore.bookinventory.service,BookSearchService.searchBooks..inlined.compareBy.new Comparator() {...},13,0,0,0,1,0,1,0,1,0
+book-inventory-service,com.bookstore.bookinventory.service,InventoryService,281,129,28,4,42,27,21,2,5,2
+book-inventory-service,com.bookstore.bookinventory.service,BookService,60,393,9,9,5,79,9,7,0,7
+book-inventory-service,com.bookstore.bookinventory.service,BookSearchService,117,257,47,19,2,43,33,2,0,2
+book-inventory-service,com.bookstore.bookinventory.service,BookSearchService.searchBooks.sortedBooks.new Function1() {...},44,0,13,0,6,0,9,0,1,0
+book-inventory-service,com.bookstore.bookinventory.service,BookSearchService.searchBooks.sortedBooks.new Function1() {...},44,0,13,0,6,0,9,0,1,0
+book-inventory-service,com.bookstore.bookinventory.controller,BookController,0,64,0,0,0,8,0,6,0,6
+book-inventory-service,com.bookstore.bookinventory.controller,InventoryController,0,62,0,0,0,9,0,6,0,6
+book-inventory-service,com.bookstore.bookinventory.controller,BookSearchController,0,21,0,0,0,3,0,2,0,2

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.bookinventory.controller.InventoryControllerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:19:59.920Z" hostname="INCHEL-8WFYB24" time="0.343">
+  <properties/>
+  <testcase name="listLowOrOutOfStockBooks returns list()" classname="com.bookstore.bookinventory.controller.InventoryControllerTest" time="0.116"/>
+  <testcase name="getInventoryStatus returns status()" classname="com.bookstore.bookinventory.controller.InventoryControllerTest" time="0.122"/>
+  <testcase name="updateInventory returns no content()" classname="com.bookstore.bookinventory.controller.InventoryControllerTest" time="0.048"/>
+  <testcase name="filterBooksByStock returns list()" classname="com.bookstore.bookinventory.controller.InventoryControllerTest" time="0.022"/>
+  <testcase name="decreaseInventory returns no content()" classname="com.bookstore.bookinventory.controller.InventoryControllerTest" time="0.017"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

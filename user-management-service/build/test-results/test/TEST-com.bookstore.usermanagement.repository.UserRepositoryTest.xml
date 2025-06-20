@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bookstore.usermanagement.repository.UserRepositoryTest" tests="11" skipped="11" failures="0" errors="0" timestamp="2025-06-20T11:48:17.172Z" hostname="INCHEL-8WFYB24" time="0.01">
+  <properties/>
+  <testcase name="existsById should return false when user not exists()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="existsByUserName should return true when user exists()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.001">
+    <skipped/>
+  </testcase>
+  <testcase name="existsByUserName should return false when user not exists()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="findByUserName should return empty when user not exists()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="findById should return empty when user not exists()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="findAll should return all users()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="save should persist new user()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="findByUserName should return user when exists()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="existsById should return true when user exists()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="findById should return user when exists()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="deleteById should remove user()" classname="com.bookstore.usermanagement.repository.UserRepositoryTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

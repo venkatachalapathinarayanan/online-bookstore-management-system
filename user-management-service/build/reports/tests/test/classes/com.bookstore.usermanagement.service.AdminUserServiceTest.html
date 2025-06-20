@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - AdminUserServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>AdminUserServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.bookstore.usermanagement.service.html">com.bookstore.usermanagement.service</a> &gt; AdminUserServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">12</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.787s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">addAdmin should create new admin user successfully()</td>
+<td class="success">0.086s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">addAdmin should throw exception when username already exists()</td>
+<td class="success">0.023s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteAdmin should delete existing admin successfully()</td>
+<td class="success">0.025s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteAdmin should throw exception when admin not found()</td>
+<td class="success">0.032s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteAdmin should throw exception when user is not admin()</td>
+<td class="success">0.040s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getAdmin should return admin user when found()</td>
+<td class="success">0.027s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getAdmin should throw exception when admin not found()</td>
+<td class="success">0.020s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getAdmin should throw exception when user is not admin()</td>
+<td class="success">0.038s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">listAdmins should return only admin users()</td>
+<td class="success">0.026s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateAdmin should throw exception when admin not found()</td>
+<td class="success">0.030s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateAdmin should throw exception when user is not admin()</td>
+<td class="success">0.358s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateAdmin should update existing admin successfully()</td>
+<td class="success">0.082s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>17:18:21.099 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Request to update admin user with id: 1
+17:18:21.119 [Test worker] WARN com.bookstore.usermanagement.service.AdminUserService -- Not an admin user for id: 1
+17:18:21.437 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Request to add admin user: existingadmin
+17:18:21.437 [Test worker] WARN com.bookstore.usermanagement.service.AdminUserService -- Username already exists: existingadmin
+17:18:21.466 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Request to delete admin user with id: 999
+17:18:21.469 [Test worker] WARN com.bookstore.usermanagement.service.AdminUserService -- Admin user not found for id: 999
+17:18:21.502 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Request to delete admin user with id: 1
+17:18:21.503 [Test worker] WARN com.bookstore.usermanagement.service.AdminUserService -- Not an admin user for id: 1
+17:18:21.537 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Fetching admin user with id: 1
+17:18:21.553 [Test worker] WARN com.bookstore.usermanagement.service.AdminUserService -- Admin user not found for id: 1
+17:18:21.611 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Request to update admin user with id: 1
+17:18:21.613 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Updating admin user with id: 1
+17:18:21.669 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Listing all admin users
+17:18:21.689 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Fetching admin user with id: 999
+17:18:21.689 [Test worker] WARN com.bookstore.usermanagement.service.AdminUserService -- Admin user not found for id: 999
+17:18:21.716 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Fetching admin user with id: 1
+17:18:21.783 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Request to add admin user: admin1
+17:18:21.793 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Admin user created successfully: admin1
+17:18:21.839 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Request to update admin user with id: 999
+17:18:21.840 [Test worker] WARN com.bookstore.usermanagement.service.AdminUserService -- Admin user not found for id: 999
+17:18:21.870 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Request to delete admin user with id: 1
+17:18:21.871 [Test worker] INFO com.bookstore.usermanagement.service.AdminUserService -- Deleting admin user with id: 1
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 8.14.2</a> at 20-Jun-2025, 5:18:23 pm</p>
+</div>
+</div>
+</body>
+</html>

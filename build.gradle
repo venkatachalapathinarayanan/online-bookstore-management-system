@@ -1,0 +1,227 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.3' apply false
+    id 'io.spring.dependency-management' version '1.1.4' apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22' apply false
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22' apply false
+    id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22' apply false
+    id 'org.sonarqube' version '4.4.1.3373'
+    id 'jacoco'
+}
+
+allprojects {
+    group = 'com.bookstore'
+    version = '1.0.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+//        mavenCentral {
+//            url "https://repo1.maven.org/maven2/"
+//            content {
+//                setAllowInsecureProtocol(false)
+//            }
+//        }
+    }
+}
+
+subprojects {
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
+    apply plugin: 'org.sonarqube'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+
+    dependencies {
+        // Common dependencies for all services
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        
+        // Common test dependencies
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'io.mockk:mockk:1.13.9'
+        testImplementation 'com.h2database:h2'
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+        kotlinOptions {
+            freeCompilerArgs += '-Xjsr305=strict'
+            jvmTarget = '17'
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+
+    // Enhanced JaCoCo configuration for controller and service classes only
+    jacoco {
+        toolVersion = "0.8.8"
+    }
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required = true
+            html.required = true
+            csv.required = true
+        }
+        
+        // Include only controller and service classes
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, include: [
+                    '**/controller/**',
+                    '**/service/**'
+                ], exclude: [
+                    '**/*Application*',
+                    '**/*Config*',
+                    '**/*Test*',
+                    '**/dto/**',
+                    '**/model/**',
+                    '**/repository/**',
+                    '**/security/**',
+                    '**/exception/**'
+                ])
+            }))
+        }
+        
+        finalizedBy jacocoTestCoverageVerification
+    }
+
+    jacocoTestCoverageVerification {
+        dependsOn jacocoTestReport
+        violationRules {
+            rule {
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.60 // 60% minimum coverage
+                }
+            }
+            rule {
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.20 // 20% minimum branch coverage
+                }
+            }
+        }
+        
+        // Apply same filtering as jacocoTestReport
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, include: [
+                    '**/controller/**',
+                    '**/service/**'
+                ], exclude: [
+                    '**/*Application*',
+                    '**/*Config*',
+                    '**/*Test*',
+                    '**/dto/**',
+                    '**/model/**',
+                    '**/repository/**',
+                    '**/security/**',
+                    '**/exception/**'
+                ])
+            }))
+        }
+    }
+}
+
+// Root SonarQube configuration
+sonar {
+    properties {
+        property "sonar.projectKey", "online-bookstore-management-system"
+        property "sonar.projectName", "Online Bookstore Management System"
+        property "sonar.projectVersion", "1.0.0-SNAPSHOT"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.language", "kotlin"
+        property "sonar.host.url", "http://localhost:9000"
+        
+        // Coverage settings
+        property "sonar.coverage.jacoco.xmlReportPaths", 
+            "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml," +
+            "${project(':user-management-service').buildDir}/reports/jacoco/test/jacocoTestReport.xml," +
+            "${project(':book-inventory-service').buildDir}/reports/jacoco/test/jacocoTestReport.xml," +
+            "${project(':order-management-service').buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        
+        // Include only controller and service classes for analysis
+        property "sonar.inclusions", "**/controller/**, **/service/**"
+        property "sonar.exclusions", 
+            "**/*Application*, **/*Config*, **/*Test*, **/dto/**, **/model/**, " +
+            "**/repository/**, **/security/**, **/exception/**, **/build/**"
+        
+        // Test settings
+        property "sonar.junit.reportPaths", 
+            "${project(':user-management-service').buildDir}/test-results/test," +
+            "${project(':book-inventory-service').buildDir}/test-results/test," +
+            "${project(':order-management-service').buildDir}/test-results/test"
+        
+        // Quality gate settings
+        property "sonar.qualitygate.wait", "true"
+    }
+}
+
+// Task to build all services
+task buildAll {
+    dependsOn subprojects.build
+}
+
+// Task to clean all services
+task cleanAll {
+    dependsOn subprojects.clean
+}
+
+// Task to run all tests and generate coverage reports
+task testAll {
+    dependsOn subprojects.test
+    dependsOn subprojects.jacocoTestReport
+}
+
+// Task to generate consolidated coverage report
+task consolidatedJacocoReport(type: JacocoReport) {
+    dependsOn subprojects.test
+    
+    description = 'Generate consolidated Jacoco coverage report for all services'
+    group = 'reporting'
+    
+    additionalSourceDirs.from = files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.from = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from = files(subprojects.sourceSets.main.output)
+    executionData.from = files(subprojects.jacocoTestReport.executionData)
+    
+    // Filter to include only controller and service classes
+    classDirectories.setFrom(files(classDirectories.files.collect {
+        fileTree(dir: it, include: [
+            '**/controller/**',
+            '**/service/**'
+        ], exclude: [
+            '**/*Application*',
+            '**/*Config*',
+            '**/*Test*',
+            '**/dto/**',
+            '**/model/**',
+            '**/repository/**',
+            '**/security/**',
+            '**/exception/**'
+        ])
+    }))
+    
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = true
+    }
+}
+
+System.setProperty("javax.net.ssl.trustStore", "path/to/cacerts")
+System.setProperty("javax.net.ssl.trustStorePassword", "changeit")

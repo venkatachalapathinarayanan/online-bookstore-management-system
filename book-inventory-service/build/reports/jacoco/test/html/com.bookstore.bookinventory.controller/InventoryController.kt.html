@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryController.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">book-inventory-service</a> &gt; <a href="index.source.html" class="el_package">com.bookstore.bookinventory.controller</a> &gt; <span class="el_source">InventoryController.kt</span></div><h1>InventoryController.kt</h1><pre class="source lang-java linenums">package com.bookstore.bookinventory.controller
+
+import com.bookstore.bookinventory.dto.InventoryUpdateRequestDTO
+import com.bookstore.bookinventory.dto.InventoryDecreaseRequestDTO
+import com.bookstore.bookinventory.dto.InventoryStatusDTO
+import com.bookstore.bookinventory.service.InventoryService
+import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+
+<span class="fc" id="L11">@RestController</span>
+@RequestMapping(&quot;/api/inventory&quot;)
+<span class="fc" id="L13">class InventoryController(private val inventoryService: InventoryService) {</span>
+
+    @PostMapping(&quot;/update&quot;)
+    fun updateInventory(@Valid @RequestBody request: InventoryUpdateRequestDTO): ResponseEntity&lt;Void&gt; {
+<span class="fc" id="L17">        inventoryService.updateInventory(request)</span>
+<span class="fc" id="L18">        return ResponseEntity.noContent().build()</span>
+    }
+
+    @PostMapping(&quot;/decrease&quot;)
+    fun decreaseInventory(@Valid @RequestBody request: InventoryDecreaseRequestDTO): ResponseEntity&lt;Void&gt; {
+<span class="fc" id="L23">        inventoryService.decreaseInventory(request)</span>
+<span class="fc" id="L24">        return ResponseEntity.noContent().build()</span>
+    }
+
+    @GetMapping(&quot;/status/{bookId}&quot;)
+    fun getInventoryStatus(@PathVariable bookId: Long): ResponseEntity&lt;InventoryStatusDTO&gt; =
+<span class="fc" id="L29">        ResponseEntity.ok(inventoryService.getInventoryStatus(bookId))</span>
+
+    @GetMapping(&quot;/filter&quot;)
+    fun filterBooksByStock(@RequestParam minStock: Int): ResponseEntity&lt;List&lt;InventoryStatusDTO&gt;&gt; =
+<span class="fc" id="L33">        ResponseEntity.ok(inventoryService.filterBooksByStock(minStock))</span>
+
+    @GetMapping(&quot;/low-stock&quot;)
+    fun listLowOrOutOfStockBooks(@RequestParam(required = false, defaultValue = &quot;5&quot;) threshold: Int): ResponseEntity&lt;List&lt;InventoryStatusDTO&gt;&gt; =
+<span class="fc" id="L37">        ResponseEntity.ok(inventoryService.listLowOrOutOfStockBooks(threshold))</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

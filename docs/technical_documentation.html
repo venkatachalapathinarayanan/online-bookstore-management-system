@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Bookstore Management System - Technical Documentation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+
+        .header-content .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+
+        .header-meta span {
+            background: rgba(255,255,255,0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-content {
+            padding: 2rem;
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .tech-stack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .tech-icon {
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        .back-to-top:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .header-content h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .feature-grid,
+            .tech-stack-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        .mermaid {
+            text-align: center;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1><i class="fas fa-book"></i> Online Bookstore Management System</h1>
+                <p class="subtitle">Technical Documentation & Architecture Guide</p>
+                <div class="header-meta">
+                    <span><i class="fas fa-code"></i> Version 1.0.0</span>
+                    <span><i class="fas fa-calendar"></i> December 2024</span>
+                    <span><i class="fas fa-users"></i> Microservices Architecture</span>
+                    <span><i class="fas fa-shield-alt"></i> Production Ready</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <ul class="nav-links">
+                    <li><a href="#executive-summary" onclick="scrollToSection('executive-summary')">Executive Summary</a></li>
+                    <li><a href="#tech-stack" onclick="scrollToSection('tech-stack')">Tech Stack</a></li>
+                    <li><a href="#architecture" onclick="scrollToSection('architecture')">Architecture</a></li>
+                    <li><a href="#api-docs" onclick="scrollToSection('api-docs')">API Documentation</a></li>
+                    <li><a href="#database" onclick="scrollToSection('database')">Database Design</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <!-- Executive Summary Section -->
+            <section id="executive-summary" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fas fa-chart-line"></i> Executive Summary</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="section-content active">
+                    <div class="highlight-box">
+                        <h3>System Overview</h3>
+                        <p>The Online Bookstore Management System is a modern, cloud-native microservices application built using <strong>Spring Boot 3.2.3</strong> and <strong>Kotlin</strong>. The system provides comprehensive book catalog management, user authentication, shopping cart functionality, and order processing capabilities.</p>
+                    </div>
+
+                    <h3>Key Features</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-lock"></i> Secure Authentication</h4>
+                            <p>JWT-based authentication with role-based access control supporting USER, ADMIN, and SUPERADMIN roles.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-books"></i> Book Management</h4>
+                            <p>Complete catalog with search, filtering, and real-time inventory tracking capabilities.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-shopping-cart"></i> Shopping Experience</h4>
+                            <p>Full-featured shopping cart and comprehensive order processing workflow.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-users"></i> User Management</h4>
+                            <p>User registration, profile management, and administrative controls.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-stream"></i> Real-time Updates</h4>
+                            <p>Event-driven architecture with Apache Kafka messaging for seamless communication.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-api"></i> RESTful APIs</h4>
+                            <p>OpenAPI 3.0 compliant REST endpoints with comprehensive documentation.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technology Stack Section -->
+            <section id="tech-stack" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fas fa-layer-group"></i> Technology Stack</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="section-content">
+                    <h3>Core Technologies</h3>
+                    <div class="tech-stack-grid">
+                        <div class="tech-item">
+                            <i class="fab fa-java tech-icon"></i>
+                            <div>
+                                <strong>Java 17</strong><br>
+                                <small>Application runtime environment</small>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <i class="fas fa-code tech-icon"></i>
+                            <div>
+                                <strong>Kotlin 1.9.22</strong><br>
+                                <small>Primary development language</small>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <i class="fas fa-leaf tech-icon"></i>
+                            <div>
+                                <strong>Spring Boot 3.2.3</strong><br>
+                                <small>Application framework</small>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <i class="fas fa-shield-alt tech-icon"></i>
+                            <div>
+                                <strong>Spring Security 6.x</strong><br>
+                                <small>Authentication & authorization</small>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <i class="fas fa-database tech-icon"></i>
+                            <div>
+                                <strong>PostgreSQL 16</strong><br>
+                                <small>Persistent data storage</small>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <i class="fas fa-stream tech-icon"></i>
+                            <div>
+                                <strong>Apache Kafka 7.4.0</strong><br>
+                                <small>Event streaming platform</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Infrastructure Components</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Image</th>
+                                    <th>Port</th>
+                                    <th>Purpose</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>PostgreSQL</strong></td>
+                                    <td>postgres:16-alpine</td>
+                                    <td>5432</td>
+                                    <td>Primary database</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>pgAdmin</strong></td>
+                                    <td>dpage/pgadmin4</td>
+                                    <td>5050</td>
+                                    <td>Database administration</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Apache Kafka</strong></td>
+                                    <td>confluentinc/cp-kafka:7.4.0</td>
+                                    <td>9092</td>
+                                    <td>Message streaming</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Kafka UI</strong></td>
+                                    <td>provectuslabs/kafka-ui</td>
+                                    <td>8080</td>
+                                    <td>Kafka management</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Architecture Section -->
+            <section id="architecture" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fas fa-sitemap"></i> System Architecture</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="section-content">
+                    <h3>High-Level Architecture</h3>
+                    <p>The system follows a <strong>microservices architecture</strong> pattern with these key characteristics:</p>
+                    <ul>
+                        <li><strong>Service Independence:</strong> Each service can be developed, deployed, and scaled independently</li>
+                        <li><strong>Event-Driven Communication:</strong> Services communicate through Kafka events for loose coupling</li>
+                        <li><strong>Database per Service:</strong> Each service owns its data and database schema</li>
+                        <li><strong>Containerized Deployment:</strong> All services run in Docker containers</li>
+                    </ul>
+
+                    <div class="mermaid">
+graph TB
+    subgraph "Client Layer"
+        WEB[Web Client]
+        MOBILE[Mobile App]
+    end
+    
+    subgraph "Microservices Layer"
+        UMS["User Management Service<br/>Port: 8083"]
+        BIS["Book Inventory Service<br/>Port: 8081"] 
+        OMS["Order Management Service<br/>Port: 8082"]
+    end
+    
+    subgraph "Message Broker"
+        KAFKA[Apache Kafka<br/>Port: 9092]
+    end
+    
+    subgraph "Database Layer"
+        DB1[(bookstore_users)]
+        DB2[(bookstore_inventory)]
+        DB3[(bookstore_orders)]
+    end
+    
+    WEB --> UMS
+    WEB --> BIS
+    WEB --> OMS
+    MOBILE --> UMS
+    MOBILE --> BIS
+    MOBILE --> OMS
+    
+    UMS --> DB1
+    BIS --> DB2
+    OMS --> DB3
+    
+    UMS -.-> KAFKA
+    BIS -.-> KAFKA
+    OMS -.-> KAFKA
+    
+    classDef serviceBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef dbBox fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    
+    class UMS,BIS,OMS serviceBox
+    class DB1,DB2,DB3 dbBox
+                    </div>
+
+                    <h3>Microservices Overview</h3>
+                    
+                    <h4>User Management Service (Port: 8083)</h4>
+                    <div class="feature-card">
+                        <p><strong>Purpose:</strong> Handles user authentication, authorization, and profile management.</p>
+                        <p><strong>Key Responsibilities:</strong></p>
+                        <ul>
+                            <li>User registration and login</li>
+                            <li>JWT token generation and validation</li>
+                            <li>Role-based access control (USER, ADMIN, SUPERADMIN)</li>
+                            <li>User profile management</li>
+                        </ul>
+                        <p><strong>Database:</strong> bookstore_users</p>
+                    </div>
+
+                    <h4>Book Inventory Service (Port: 8081)</h4>
+                    <div class="feature-card">
+                        <p><strong>Purpose:</strong> Manages book catalog, inventory, and search functionality.</p>
+                        <p><strong>Key Responsibilities:</strong></p>
+                        <ul>
+                            <li>Book catalog management (CRUD operations)</li>
+                            <li>Inventory tracking and stock management</li>
+                            <li>Advanced book search and filtering</li>
+                            <li>Price management and low stock alerts</li>
+                        </ul>
+                        <p><strong>Database:</strong> bookstore_inventory</p>
+                    </div>
+
+                    <h4>Order Management Service (Port: 8082)</h4>
+                    <div class="feature-card">
+                        <p><strong>Purpose:</strong> Handles shopping cart operations and order processing.</p>
+                        <p><strong>Key Responsibilities:</strong></p>
+                        <ul>
+                            <li>Shopping cart management</li>
+                            <li>Order creation and processing</li>
+                            <li>Payment confirmation</li>
+                            <li>Order status tracking and history</li>
+                        </ul>
+                        <p><strong>Database:</strong> bookstore_orders</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Online Bookstore Management System - Technical Documentation</p>
+            <p>Built with Spring Boot, Kotlin, and modern microservices architecture</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            content.classList.toggle('active');
+            header.classList.toggle('active');
+        }
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.scrollIntoView({ behavior: 'smooth' });
+            
+            // Update active nav link
+            const navItems = document.querySelectorAll('.nav-links a');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // Update active nav link on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (pageYOffset >= sectionTop) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

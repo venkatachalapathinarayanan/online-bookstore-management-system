@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+user-management-service,com.bookstore.usermanagement.controller,AuthController,0,76,0,2,0,11,0,4,0,3
+user-management-service,com.bookstore.usermanagement.controller,UserController,0,40,0,0,0,7,0,6,0,6
+user-management-service,com.bookstore.usermanagement.controller,AdminUserController,0,40,0,0,0,7,0,6,0,6
+user-management-service,com.bookstore.usermanagement.service,AdminUserService.getAdmin.new Function1() {...},0,7,0,0,0,1,0,1,0,1
+user-management-service,com.bookstore.usermanagement.service,AdminUserService.getAdmin.new Function1() {...},0,6,0,0,0,1,0,1,0,1
+user-management-service,com.bookstore.usermanagement.service,UserService,30,408,1,7,6,76,1,14,0,11
+user-management-service,com.bookstore.usermanagement.service,UserService.getUser.new Function1() {...},0,7,0,0,0,1,0,1,0,1
+user-management-service,com.bookstore.usermanagement.service,AdminUserService,87,417,2,8,15,79,2,15,0,12
