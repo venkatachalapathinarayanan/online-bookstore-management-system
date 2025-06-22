@@ -22,6 +22,7 @@ class SecurityConfig {
             requests
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/api/books/search/**").hasAnyAuthority("USERS", "ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/books/prices").authenticated()
                 .anyRequest().hasAnyAuthority("ADMIN", "SUPERADMIN")
         }
         http.csrf { it.disable() }

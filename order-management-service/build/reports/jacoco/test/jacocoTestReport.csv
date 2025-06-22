@@ -1,6 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-order-management-service,com.bookstore.ordermanagement.controller,CartController,0,56,0,0,0,10,0,5,0,5
-order-management-service,com.bookstore.ordermanagement.controller,OrderController,0,67,0,0,0,12,0,6,0,6
-order-management-service,com.bookstore.ordermanagement.service,CartService.removeFromCart.new Function1() {...},15,0,2,0,1,0,2,0,1,0
-order-management-service,com.bookstore.ordermanagement.service,CartService,39,132,10,6,1,18,9,5,1,5
-order-management-service,com.bookstore.ordermanagement.service,OrderService,230,447,5,1,29,61,6,5,3,5

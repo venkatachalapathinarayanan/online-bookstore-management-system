@@ -62,7 +62,7 @@ class UserService(
         return userRepository.findById(id).map { it.toResponseDTO() }
             .orElseThrow {
                 logger.warn("User not found for id: {}", id)
-                NoSuchElementException("User not found")
+                ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
             }
     }
 

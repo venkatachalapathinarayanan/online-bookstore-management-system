@@ -7,6 +7,7 @@ import jakarta.persistence.*
 data class Cart(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+    @Column(name = "user_id")
     val userId: Long,
     @OneToMany(mappedBy = "cart", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     val items: MutableList<CartItem> = mutableListOf()
@@ -17,6 +18,7 @@ data class Cart(
 data class CartItem(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+    @Column(name = "book_id")
     val bookId: Long,
     var quantity: Int,
     @ManyToOne(fetch = FetchType.LAZY)

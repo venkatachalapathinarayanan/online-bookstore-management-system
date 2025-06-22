@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.bookstore.bookinventory.service.InventoryServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-06-20T11:20:05.622Z" hostname="INCHEL-8WFYB24" time="0.062">
-  <properties/>
-  <testcase name="updateInventory updates inventory()" classname="com.bookstore.bookinventory.service.InventoryServiceTest" time="0.062"/>
-  <system-out><![CDATA[16:50:05.665 [Test worker] INFO com.bookstore.bookinventory.service.InventoryService -- Inventory updated for bookId 1: new quantity 10
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

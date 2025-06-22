@@ -1,9 +1,11 @@
 package com.bookstore.ordermanagement.dto
 
+import java.math.BigDecimal
+
 data class OrderItemRequestDTO(
     val bookId: Long,
     val quantity: Int,
-    val price: Double
+    val price: BigDecimal
 )
 
 data class OrderRequestDTO(
@@ -14,7 +16,7 @@ data class OrderRequestDTO(
 data class OrderItemResponseDTO(
     val bookId: Long,
     val quantity: Int,
-    val price: Double
+    val price: BigDecimal
 )
 
 data class OrderResponseDTO(

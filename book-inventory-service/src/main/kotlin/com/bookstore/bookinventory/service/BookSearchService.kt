@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 class BookSearchService(
@@ -33,7 +34,7 @@ class BookSearchService(
                 (request.isbn.isNullOrBlank() || book.isbn.equals(request.isbn, ignoreCase = true))
             }
             .filter { book ->
-                val price = bookPriceRepository.findByBookId(book.id)?.price ?: 0.0
+                val price = bookPriceRepository.findByBookId(book.id)?.price ?: BigDecimal.ZERO
                 (request.minPrice == null || price >= request.minPrice) &&
                 (request.maxPrice == null || price <= request.maxPrice)
             }
@@ -73,7 +74,7 @@ class BookSearchService(
         val end = (start + pageable.pageSize).coerceAtMost(sortedBooks.size)
         val pageContent = if (start <= end) sortedBooks.subList(start, end) else emptyList()
         val responseList = pageContent.map { book ->
-            val price = bookPriceRepository.findByBookId(book.id)?.price ?: 0.0
+            val price = bookPriceRepository.findByBookId(book.id)?.price ?: BigDecimal.ZERO
             val quantity = bookInventoryRepository.findByBookId(book.id)?.quantity ?: 0
             BookResponseDTO(
                 id = book.id,

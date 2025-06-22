@@ -110,11 +110,11 @@ class UserControllerTest {
     fun `getUser should return 404 when user not found`() {
         // Arrange
         val userId = 999L
-        every { userService.getUser(userId) } throws NoSuchElementException("User not found")
+        every { userService.getUser(userId) } throws ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
 
         // Act & Assert
         mockMvc.perform(get("/api/users/{id}", userId))
-            .andExpect(status().isInternalServerError) // Service throws NoSuchElementException which gets handled as 500
+            .andExpect(status().isNotFound)
     }
 
     @Test

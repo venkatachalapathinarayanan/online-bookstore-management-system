@@ -11,6 +11,7 @@ import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class BookServiceTest {
@@ -28,9 +29,9 @@ class BookServiceTest {
 
     @Test
     fun `createBook returns BookResponseDTO`() {
-        val request = BookRequestDTO("title", "author", "genre", "isbn", 10.0, 5)
+        val request = BookRequestDTO("title", "author", "genre", "isbn", BigDecimal("10.0"), 5)
         val book = Book(1L, "title", "author", "genre", "isbn", LocalDateTime.now(), LocalDateTime.now(), false)
-        val bookPrice = BookPrice(1L, 1L, 10.0)
+        val bookPrice = BookPrice(1L, 1L, BigDecimal("10.0"))
         val bookInventory = BookInventory(1L, 1L, 5)
         
         val bookSlot = slot<Book>()
@@ -50,7 +51,7 @@ class BookServiceTest {
         
         assertEquals("title", result.title)
         assertEquals("author", result.author)
-        assertEquals(10.0, result.price)
+        assertEquals(BigDecimal("10.0"), result.price)
         assertEquals(5, result.quantity)
         
         assertEquals(request.title, bookSlot.captured.title)
@@ -72,7 +73,7 @@ class BookServiceTest {
     @Test
     fun `getBook returns BookResponseDTO`() {
         val book = Book(1L, "title", "author", "genre", "isbn", LocalDateTime.now(), LocalDateTime.now(), false)
-        val bookPrice = BookPrice(1L, 1L, 10.0)
+        val bookPrice = BookPrice(1L, 1L, BigDecimal("10.0"))
         val bookInventory = BookInventory(1L, 1L, 5)
         
         every { bookRepository.findByIdAndIsDeletedFalse(1L) } returns book
@@ -81,14 +82,14 @@ class BookServiceTest {
 
         val result = bookService.getBook(1L)
         assertEquals(1L, result.id)
-        assertEquals(10.0, result.price)
+        assertEquals(BigDecimal("10.0"), result.price)
         assertEquals(5, result.quantity)
     }
 
     @Test
     fun `listBooks returns list of BookResponseDTO`() {
         val book = Book(1L, "title", "author", "genre", "isbn", LocalDateTime.now(), LocalDateTime.now(), false)
-        val bookPrice = BookPrice(1L, 1L, 10.0)
+        val bookPrice = BookPrice(1L, 1L, BigDecimal("10.0"))
         val bookInventory = BookInventory(1L, 1L, 5)
         
         every { bookRepository.findByIsDeletedFalse() } returns listOf(book)
@@ -97,15 +98,15 @@ class BookServiceTest {
 
         val result = bookService.listBooks()
         assertEquals(1, result.size)
-        assertEquals(10.0, result[0].price)
+        assertEquals(BigDecimal("10.0"), result[0].price)
         assertEquals(5, result[0].quantity)
     }
 
     @Test
     fun `updateBook returns updated BookResponseDTO`() {
-        val request = BookRequestDTO("title", "author", "genre", "isbn", 10.0, 5)
+        val request = BookRequestDTO("title", "author", "genre", "isbn", BigDecimal("10.0"), 5)
         val book = Book(1L, "title", "author", "genre", "isbn", LocalDateTime.now(), LocalDateTime.now(), false)
-        val bookPrice = BookPrice(1L, 1L, 10.0)
+        val bookPrice = BookPrice(1L, 1L, BigDecimal("10.0"))
         val bookInventory = BookInventory(1L, 1L, 5)
         
         val bookSlot = slot<Book>()
@@ -122,7 +123,7 @@ class BookServiceTest {
         val result = bookService.updateBook(1L, request)
         
         assertEquals("title", result.title)
-        assertEquals(10.0, result.price)
+        assertEquals(BigDecimal("10.0"), result.price)
         assertEquals(5, result.quantity)
         
         assertEquals(book.id, bookSlot.captured.id)

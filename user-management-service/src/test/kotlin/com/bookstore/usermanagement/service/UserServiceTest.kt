@@ -131,7 +131,7 @@ class UserServiceTest {
         every { userRepository.findById(userId) } returns Optional.empty()
 
         // Act & Assert
-        assertThrows<NoSuchElementException> {
+        assertThrows<ResponseStatusException> {
             userService.getUser(userId)
         }
 

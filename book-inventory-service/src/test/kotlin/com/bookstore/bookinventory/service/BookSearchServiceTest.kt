@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.data.domain.Page
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class BookSearchServiceTest {
@@ -38,14 +39,14 @@ class BookSearchServiceTest {
             isDeleted = false
         )
         every { bookRepository.findByIsDeletedFalse() } returns listOf(book)
-        every { bookPriceRepository.findByBookId(1L)?.price } returns 99.99
+        every { bookPriceRepository.findByBookId(1L)?.price } returns BigDecimal("99.99")
         every { bookInventoryRepository.findByBookId(1L)?.quantity } returns 10
 
         val request = BookSearchRequestDTO(page = 0, size = 10, sortBy = "title", sortDir = "asc")
         val result: Page<BookResponseDTO> = bookSearchService.searchBooks(request)
         assertEquals(1, result.totalElements)
         val dto = result.content.first()
-        assertEquals(99.99, dto.price)
+        assertEquals(BigDecimal("99.99"), dto.price)
         assertEquals(10, dto.quantity)
     }
 }

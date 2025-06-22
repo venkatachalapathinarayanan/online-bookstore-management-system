@@ -1,6 +1,7 @@
 package com.bookstore.bookinventory.model
 
 import jakarta.persistence.*
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
@@ -12,8 +13,11 @@ data class Book(
     val author: String,
     val genre: String,
     val isbn: String,
+    @Column(name = "created_at")
     val createdAt: LocalDateTime = LocalDateTime.now(),
+    @Column(name = "updated_at")
     val updatedAt: LocalDateTime = LocalDateTime.now(),
+    @Column(name = "is_deleted")
     val isDeleted: Boolean = false
 )
 
@@ -24,7 +28,8 @@ data class BookPrice(
     val id: Long = 0,
     @Column(name = "book_id")
     val bookId: Long,
-    val price: Double
+    @Column(precision = 10, scale = 2)
+    val price: BigDecimal
 )
 
 @Entity

@@ -1,7 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
-    id 'jacoco'
 }
 
 group = 'com.bookstore.common'
@@ -20,8 +19,7 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
-    testImplementation 'org.mockito:mockito-core:5.2.0'
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.2.0'
+    testImplementation 'io.mockk:mockk:1.13.9'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
@@ -31,11 +29,4 @@ bootJar {
 }
 jar {
     enabled = true
-}
-
-jacocoTestReport {
-    reports {
-        xml.required = true
-        html.required = true
-    }
 }

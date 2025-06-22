@@ -1,2 +1,0 @@
-u16:50:41.269 [Test worker] INFO com.bookstore.ordermanagement.service.OrderService -- Payment confirmed for order 1
-u16:50:41.467 [Test worker] INFO com.bookstore.ordermanagement.service.OrderService -- Order created successfully: 1

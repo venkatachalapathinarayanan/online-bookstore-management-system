@@ -7,12 +7,18 @@ spring:
     password: ${DB_PASSWORD:postgres}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
+    validate-on-migrate: true
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     consumer:
@@ -25,6 +31,27 @@ server:
 jwt:
   secret: ${JWT_SECRET:MC+Wos2SK728ig80cfHDRZBnhUdEfh+CaYWHjUrsKoQ=}
   expiration: 86400000 # 24 hours in milliseconds
+
+# Book Inventory Service Configuration
+book-inventory:
+  service:
+    url: ${BOOK_INVENTORY_SERVICE_URL:http://book-inventory-service:8081}
+    timeout: ${BOOK_INVENTORY_SERVICE_TIMEOUT:5000}
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      bookInventoryService:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+  timelimiter:
+    instances:
+      bookInventoryService:
+        timeout-duration: 5s
 
 management:
   endpoints:

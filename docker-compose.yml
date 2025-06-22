@@ -111,29 +111,9 @@ services:
         condition: service_healthy
     ports:
       - "8083:8083"
-
-  # Order Management Service
-  order-management-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        MODULE: order-management-service
-        SERVICE_PORT: 8082
-    container_name: order-management-service
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookstore_orders
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      SERVICE_PORT: 8082
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    ports:
-      - "8082:8082"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
   # Book Inventory Service
   book-inventory-service:
@@ -157,6 +137,38 @@ services:
         condition: service_healthy
     ports:
       - "8081:8081"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  # Order Management Service
+  order-management-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: order-management-service
+        SERVICE_PORT: 8082
+    container_name: order-management-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookstore_orders
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SERVICE_PORT: 8082
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      BOOK_INVENTORY_SERVICE_URL: http://book-inventory-service:8081
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      book-inventory-service:
+        condition: service_started
+    ports:
+      - "8082:8082"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
 # Define named volumes for persistent data
 volumes:

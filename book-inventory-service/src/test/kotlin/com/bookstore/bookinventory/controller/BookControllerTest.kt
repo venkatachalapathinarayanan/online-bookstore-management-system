@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class BookControllerTest {
@@ -22,14 +23,14 @@ class BookControllerTest {
 
     @Test
     fun `createBook returns created response`() {
-        val request = BookRequestDTO("title", "author", "genre", "isbn", 10.0, 5)
+        val request = BookRequestDTO("title", "author", "genre", "isbn", BigDecimal("10.0"), 5)
         val response = BookResponseDTO(
             1L,
             "title",
             "author",
             "genre",
             "isbn",
-            10.0,
+            BigDecimal("10.0"),
             5,
             LocalDateTime.of(2024, 1, 1, 0, 0),
             LocalDateTime.of(2024, 1, 2, 0, 0),
@@ -49,7 +50,7 @@ class BookControllerTest {
             "author",
             "genre",
             "isbn",
-            10.0,
+            BigDecimal("10.0"),
             5,
             LocalDateTime.of(2024, 1, 1, 0, 0),
             LocalDateTime.of(2024, 1, 2, 0, 0),
@@ -69,7 +70,7 @@ class BookControllerTest {
                 "author",
                 "genre",
                 "isbn",
-                10.0,
+                BigDecimal("10.0"),
                 5,
                 LocalDateTime.of(2024, 1, 1, 0, 0),
                 LocalDateTime.of(2024, 1, 2, 0, 0),
@@ -83,14 +84,14 @@ class BookControllerTest {
 
     @Test
     fun `updateBook returns updated book`() {
-        val request = BookRequestDTO("title", "author", "genre", "isbn", 10.0, 5)
+        val request = BookRequestDTO("title", "author", "genre", "isbn", BigDecimal("10.0"), 5)
         val response = BookResponseDTO(
             1L,
             "title",
             "author",
             "genre",
             "isbn",
-            10.0,
+            BigDecimal("10.0"),
             5,
             LocalDateTime.of(2024, 1, 1, 0, 0),
             LocalDateTime.of(2024, 1, 2, 0, 0),

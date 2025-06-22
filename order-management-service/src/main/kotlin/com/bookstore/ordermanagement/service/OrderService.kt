@@ -13,17 +13,26 @@ import com.bookstore.ordermanagement.repository.CartRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 
 @Service
 class OrderService(
     private val orderRepository: OrderRepository,
     private val kafkaEventPublisher: KafkaEventPublisher,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private val bookInventoryClient: BookInventoryClient
 ) {
     private val logger = LoggerFactory.getLogger(OrderService::class.java)
 
     @Transactional
     fun createOrder(request: OrderRequestDTO): OrderResponseDTO {
+        // Validate that all items have prices
+        request.items.forEach { item ->
+            if (item.price <= BigDecimal.ZERO) {
+                throw IllegalArgumentException("Invalid price for book ${item.bookId}: ${item.price}")
+            }
+        }
+        
         val order = Order(
             userId = request.userId,
             items = request.items.map {
@@ -37,6 +46,7 @@ class OrderService(
         order.items.forEach { it.order = order }
         val saved = orderRepository.save(order)
         logger.info("Order created successfully: {}", saved.id)
+        
         // Publish OrderCreated event
         val event = EventMessage(
             eventType = "OrderCreated",
@@ -51,6 +61,7 @@ class OrderService(
             )
         )
         kafkaEventPublisher.publish("order-events", event)
+        
         return OrderResponseDTO(
             id = saved.id,
             userId = saved.userId,
@@ -61,22 +72,43 @@ class OrderService(
 
     @Transactional
     fun createOrderFromCart(userId: Long): OrderResponseDTO {
-        val cart = cartRepository.findByUserId(userId) ?: throw NoSuchElementException("Cart not found for user $userId")
-        if (cart.items.isEmpty()) throw IllegalStateException("Cart is empty")
+        val cart = cartRepository.findByUserId(userId) 
+            ?: throw NoSuchElementException("Cart not found for user $userId")
+        
+        if (cart.items.isEmpty()) {
+            throw IllegalStateException("Cart is empty")
+        }
+        
+        // Fetch prices for all items in cart
+        val bookIds = cart.items.map { it.bookId }
+        val prices = bookInventoryClient.getBookPrices(bookIds)
+            .block() // Convert Mono to blocking call for transaction
+        
+        if (prices == null || prices.isEmpty()) {
+            throw IllegalStateException("Unable to fetch prices for books")
+        }
+        
         val order = Order(
             userId = userId,
-            items = cart.items.map {
+            items = cart.items.map { cartItem ->
+                val price = prices[cartItem.bookId] 
+                    ?: throw IllegalStateException("Price not found for book ${cartItem.bookId}")
+                
                 OrderItem(
-                    bookId = it.bookId,
-                    quantity = it.quantity,
-                    price = 0.0 // You may want to fetch price from inventory or another service
+                    bookId = cartItem.bookId,
+                    quantity = cartItem.quantity,
+                    price = price
                 )
             }.toMutableList()
         )
         order.items.forEach { it.order = order }
+        
         val saved = orderRepository.save(order)
         cartRepository.deleteByUserId(userId)
-        logger.info("Order created from cart for user {}: orderId={}", userId, saved.id)
+        
+        logger.info("Order created from cart for user {}: orderId={}, totalItems={}", 
+            userId, saved.id, saved.items.size)
+        
         // Publish OrderCreated event
         val event = EventMessage(
             eventType = "OrderCreated",
@@ -91,6 +123,7 @@ class OrderService(
             )
         )
         kafkaEventPublisher.publish("order-events", event)
+        
         return OrderResponseDTO(
             id = saved.id,
             userId = saved.userId,

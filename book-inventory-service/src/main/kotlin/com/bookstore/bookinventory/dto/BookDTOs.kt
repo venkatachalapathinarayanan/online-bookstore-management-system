@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 // Request DTO for creating/updating a book
@@ -26,7 +27,7 @@ data class BookRequestDTO(
 
     @field:NotNull(message = "Price is required")
     @field:Positive(message = "Price must be positive")
-    val price: Double?,
+    val price: BigDecimal?,
 
     @field:NotNull(message = "Quantity is required")
     @field:Positive(message = "Quantity must be positive")
@@ -40,10 +41,20 @@ data class BookResponseDTO(
     val author: String,
     val genre: String,
     val isbn: String,
-    val price: Double,
+    val price: BigDecimal,
     val quantity: Int,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val isDeleted: Boolean
+)
+
+// Request DTO for batch price retrieval
+data class BookPriceRequestDTO(
+    val bookIds: List<Long>
+)
+
+// Response DTO for batch price retrieval
+data class BookPriceResponseDTO(
+    val prices: Map<Long, BigDecimal>
 )
 

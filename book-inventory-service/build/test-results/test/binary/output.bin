@@ -1,9 +1,0 @@
-m16:50:04.768 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Fetching book with id: 1
-m16:50:05.208 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Updating book with id: 1
-q16:50:05.221 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Book updated successfully: 1
-f16:50:05.252 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Listing all books
-i16:50:05.422 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Creating book: title
-q16:50:05.423 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Book created successfully: 1
-r16:50:05.458 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Soft deleting book with id: 1
-i16:50:05.458 [Test worker] INFO com.bookstore.bookinventory.service.BookService -- Book soft deleted: 1
-‰16:50:05.665 [Test worker] INFO com.bookstore.bookinventory.service.InventoryService -- Inventory updated for bookId 1: new quantity 10

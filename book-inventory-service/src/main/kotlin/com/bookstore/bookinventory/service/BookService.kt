@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.security.access.prepost.PreAuthorize
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Service
@@ -118,8 +119,16 @@ class BookService(
         logger.info("Book soft deleted: {}", id)
     }
 
+    fun getBookPrices(bookIds: List<Long>): Map<Long, BigDecimal> {
+        logger.info("Fetching prices for {} books", bookIds.size)
+        
+        return bookIds.associateWith { bookId ->
+            bookPriceRepository.findByBookId(bookId)?.price ?: BigDecimal.ZERO
+        }
+    }
+
     private fun toResponseDTO(book: Book): BookResponseDTO {
-        val price = bookPriceRepository.findByBookId(book.id)?.price ?: 0.0
+        val price = bookPriceRepository.findByBookId(book.id)?.price ?: BigDecimal.ZERO
         val quantity = bookInventoryRepository.findByBookId(book.id)?.quantity ?: 0
         return BookResponseDTO(
             id = book.id,

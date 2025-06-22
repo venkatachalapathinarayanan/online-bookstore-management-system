@@ -2,6 +2,8 @@ package com.bookstore.bookinventory.controller
 
 import com.bookstore.bookinventory.dto.BookRequestDTO
 import com.bookstore.bookinventory.dto.BookResponseDTO
+import com.bookstore.bookinventory.dto.BookPriceRequestDTO
+import com.bookstore.bookinventory.dto.BookPriceResponseDTO
 import com.bookstore.bookinventory.service.BookService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -44,6 +46,22 @@ class BookController(private val bookService: BookService) {
         @PathVariable id: Long
     ): ResponseEntity<BookResponseDTO> =
         ResponseEntity.ok(bookService.getBook(id))
+
+    @Operation(summary = "Get prices for multiple books", description = "Retrieves prices for a list of book IDs")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Prices retrieved successfully"),
+            ApiResponse(responseCode = "400", description = "Invalid request data")
+        ]
+    )
+    @PostMapping("/prices")
+    fun getBookPrices(
+        @Parameter(description = "List of book IDs", required = true)
+        @RequestBody request: BookPriceRequestDTO
+    ): ResponseEntity<BookPriceResponseDTO> {
+        val prices = bookService.getBookPrices(request.bookIds)
+        return ResponseEntity.ok(BookPriceResponseDTO(prices))
+    }
 
     @Operation(summary = "List all books", description = "Retrieves a list of all books in the inventory.")
     @ApiResponses(

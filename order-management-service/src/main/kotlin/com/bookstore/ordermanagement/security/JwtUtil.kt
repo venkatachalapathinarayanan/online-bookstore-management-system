@@ -17,6 +17,21 @@ class JwtUtil(
     fun extractRoles(token: String): List<String> =
         extractAllClaims(token)["roles"] as? List<String> ?: emptyList()
     fun validateToken(token: String): Boolean = !isTokenExpired(token)
+    
+    fun generateServiceToken(serviceName: String, roles: List<String>): String {
+        val claims = HashMap<String, Any>()
+        claims["roles"] = roles
+        claims["service"] = serviceName
+        
+        return Jwts.builder()
+            .setClaims(claims)
+            .setSubject(serviceName)
+            .setIssuedAt(Date())
+            .setExpiration(Date(System.currentTimeMillis() + expiration * 1000))
+            .signWith(SignatureAlgorithm.HS256, secret.toByteArray())
+            .compact()
+    }
+    
     private fun <T> extractClaim(token: String, claimsResolver: Function<Claims, T>): T {
         val claims = extractAllClaims(token)
         return claimsResolver.apply(claims)

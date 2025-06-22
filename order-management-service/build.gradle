@@ -4,7 +4,6 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
-    id 'jacoco'
 }
 
 group = 'com.bookstore'
@@ -34,6 +33,15 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     implementation project(':bookstore-common')
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+    implementation 'org.flywaydb:flyway-core'
+    
+    // Add WebClient for HTTP calls
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    
+    // Add resilience4j for circuit breaker pattern
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.2.0'
+    implementation 'io.github.resilience4j:resilience4j-timelimiter:2.2.0'
 
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
@@ -56,12 +64,5 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 bootJar {
     archiveFileName = 'order-management-service.jar'
     mainClass = 'com.bookstore.ordermanagement.OrderManagementServiceApplicationKt'
-}
-
-jacocoTestReport {
-    reports {
-        xml.required = true
-        html.required = true
-    }
 }
 
